@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanjeevani GPT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-image: url('/static/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 20px;
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin: 20px 10px;
+        }
+        .toggle-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+        .toggle img {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #clear-conversation-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .clear-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .clear-button:hover {
+            background-color: #d32f2f;
+        }
+        #chat-container {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+            overflow-y: auto;
+        }
+        #messages {
+            width: 100%;
+            padding: 10px;
+            height: 100%;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s;
+        }
+        #message-history{
+            width: 50%;
+            padding: 10px;
+            height: 100%;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s;
+            display: none;
+        }
+        #input {
+            display: flex;
+            margin-top: 10px;
+        }
+        #inputText {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #81c784;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            transition: background-color 0.3s, border-color 0.3s;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        #sendButton {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #sendButton:hover {
+            background-color: #45a049;
+        }
+        body.dark-mode {
+            background-image: url('/static/dbg.png');
+            color: #ffffff;
+        }
+        #message-history.dark-mode, #messages.dark-mode {
+            background-color: rgba(50, 50, 50, 0.2);
+        }
+        #inputText.dark-mode {
+            background-color: rgba(50, 50, 50, 0.5);
+            border: 1px solid #666;
+            color: #ffffff;
+        }
+        .button.dark-mode, #sendButton.dark-mode {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .button.dark-mode:hover, #sendButton.dark-mode:hover {
+            background-color: #c0392b;
+        }
+        .message {
+            display: flex;
+            align-items: flex-start;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        .user-message {
+            justify-content: flex-end;
+            background-color: #e0f7fa;
+        }
+        .bot-message {
+            justify-content: flex-start;
+            background-color: #f1f8e9;
+        }
+        .message img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .user-message img {
+            order: 2;
+            margin-left: 10px;
+            margin-right: 0;
+        }
+        .message span {
+            max-width: 70%;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            color: #333;
+            font-size: 14px;
+            word-break: break-word;
+        }
+        body.dark-mode .user-message {
+            background-color: #37474f;
+        }
+        body.dark-mode .bot-message {
+            background-color: #455a64;
+        }
+        .conversation-label {
+            font-weight: bold;
+            font-size: 18px;
+            margin: 20px 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1>Sanjeevani GPT</h1>
+        <div class="toggle-container">
+            <div class="toggle" id="toggle">
+                <img src="/static/dm.png" alt="Toggle Dark Mode">
+            </div>
+        </div>
+    </div>
+    <div class="button-container">
+        {% if current_user.is_authenticated %}
+            <a href="/profile" class="button">Profile</a>
+            <a href="/logout" class="button">Logout</a>
+        {% else %}
+            <a href="/login" class="button">Login</a>
+            <a href="/register" class="button">Register</a>
+        {% endif %}
+    </div>
+    <div id="clear-conversation-container">
+        {% if current_user.is_authenticated %}
+            <button id="toggleHistoryButton">Show Conversation History</button>
+            <button class="clear-button" id="clearOneButton">Clear Last Conversation</button>
+            <button class="clear-button" id="clearAllButton">Clear All Conversations</button>
+        {% endif %}
+    </div>
+    <div id="chat-container">
+        <div id="message-history"></div>
+        <div id="messages"></div>
+    </div>
+    <div id="input">
+        <input id="inputText" type="text" placeholder="Type your message..." />
+        <button id="sendButton">Send</button>
+    </div>
+    <script>
+        const socket = io();
+        const isAuthenticated = {{ 'true' if current_user.is_authenticated else 'false' }};
+        let conversations = JSON.parse(localStorage.getItem('conversations')) || [];
+        let currentConversationId = conversations.length ? conversations.length - 1 : 0;
+
+        if (isAuthenticated) {
+            let conversations = []; // Array to store conversations
+            let currentConversationId = 0; // Tracks the current conversation ID
+
+            document.getElementById('clearOneButton').addEventListener('click', () => {
+                if (conversations.length > 0) {
+                    // Remove the last conversation
+                    conversations.pop();
+                    localStorage.setItem('conversations', JSON.stringify(conversations));
+                    currentConversationId = conversations.length; // Update to point to the next new conversation
+                    displayConversationHistory();
+                    document.getElementById('messages').innerHTML = ''; // Clear chat window
+                }
+            });
+
+            document.getElementById('toggleHistoryButton').addEventListener('click', function() {
+                var historyDiv = document.getElementById('message-history');
+                var messagesDiv = document.getElementById('messages');
+                if (historyDiv.style.display === 'none') {
+                    historyDiv.style.display = 'block';
+                    messagesDiv.style.width = '50%'; // Adjust width to 50%
+                    this.textContent = 'Hide Conversation History'; // Change button text
+                } else {
+                    historyDiv.style.display = 'none';
+                    messagesDiv.style.width = '100%'; // Adjust width to 100%
+                    this.textContent = 'Show Conversation History'; // Change button text
+                }
+            });
+
+            document.getElementById('clearAllButton').addEventListener('click', () => {
+                // Clear all conversations
+                conversations = [];
+                currentConversationId = 0; // Reset ID
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+                displayConversationHistory();
+                document.getElementById('messages').innerHTML = ''; // Clear chat window
+            });
+
+            document.getElementById('sendButton').addEventListener('click', () => {
+                const msg = document.getElementById('inputText').value;
+                if (msg.trim() === "") return;
+
+                // Create a new conversation if necessary
+                if (!conversations[currentConversationId]) {
+                    conversations.push({
+                        date: new Date().toLocaleDateString(),
+                        messages: []
+                    });
+                }
+
+                // Display user message in chat
+                displayMessage('user', msg);
+
+                // Save the user message in the current conversation
+                conversations[currentConversationId].messages.push({ type: 'user-message', text: msg });
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+
+                // Clear the input field
+                document.getElementById('inputText').value = '';
+
+                // Emit message to server
+                socket.emit('message', msg);
+            });
+
+            socket.on('response', (data) => {
+                displayMessage('bot', data);
+                // Save bot message in the current conversation
+                conversations[currentConversationId].messages.push({ type: 'bot-message', text: data });
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+            });
+
+            socket.on('response', function(data) {
+                // Update the history and message display
+                updateConversationHistory(data.history); // This updates the conversation history
+                document.getElementById('chatBox').innerText += data.message; // This adds the latest response to the chat
+            });
+
+            // On page load, initialize conversations and prepare for the next one
+            window.addEventListener('DOMContentLoaded', () => {
+                const storedConversations = JSON.parse(localStorage.getItem('conversations'));
+                conversations = storedConversations || [];
+                currentConversationId = conversations.length; // Set ID to next available conversation
+                displayConversationHistory();
+            });
+
+            function displayMessage(type, text) {
+                const messageContainer = document.getElementById('messages');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', type === 'user' ? 'user-message' : 'bot-message');
+                messageElement.innerHTML = type === 'user'
+                    ? `<span>${text}</span><img src="/static/user.png" alt="User"/>`
+                    : `<img src="/static/bot.png" alt="Bot"/><span>${text}</span>`;
+                messageContainer.appendChild(messageElement);
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+
+            function displayConversationHistory() {
+                const messageHistory = document.getElementById('message-history');
+                messageHistory.innerHTML = ''; // Clear existing conversation history display
+
+                conversations.forEach((conv, index) => {
+                    const conversationLabel = document.createElement('div');
+                    conversationLabel.classList.add('conversation-label');
+                    conversationLabel.textContent = `Conversation ${index + 1} - ${conv.date}`;
+                    messageHistory.appendChild(conversationLabel);
+
+                    conv.messages.forEach(msg => {
+                        const messageElement = document.createElement('div');
+                        messageElement.classList.add('message', msg.type);
+                        messageElement.innerHTML = `<img src="${msg.type === 'user-message' ? '/static/user.png' : '/static/bot.png'}" alt="${msg.type}"/><span>${msg.text}</span>`;
+                        messageHistory.appendChild(messageElement);
+                    });
+                });
+            }
+
+        }
+
+        document.getElementById('sendButton').addEventListener('click', () => {
+            const msg = document.getElementById('inputText').value;
+            if (!conversations[currentConversationId]) {
+                conversations.push({
+                    date: new Date().toLocaleDateString(),
+                    messages: [userMessage, botMessage]
+                });
+                currentConversationId = conversations.length - 1;
+            } else {
+                conversations[currentConversationId].messages.push(userMessage, botMessage);
+            }
+            localStorage.setItem('conversations', JSON.stringify(conversations));
+            document.getElementById('inputText').value = '';
+            document.getElementById('messages').innerHTML +=
+                `<div class="message user-message"><span>${msg}</span><img src="/static/user.png" alt="User"/></div>`;
+            document.getElementById('messages').innerHTML +=
+                `<div class="message bot-message"><img src="/static/bot.png" alt="Bot"/><span>This is a bot response.</span></div>`;
+            document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+        });
+
+        function displayMessage(type, text) {
+            const messageContainer = document.getElementById('messages');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', type === 'user' ? 'user-message' : 'bot-message');
+            messageElement.innerHTML = type === 'user'
+                ? `<span>${text}</span><img src="/static/user.png" alt="User"/>`
+                : `<img src="/static/bot.png" alt="Bot"/><span>${text}</span>`;
+            messageContainer.appendChild(messageElement);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+
+        // Send user message to server when button is clicked
+        document.getElementById('sendButton').addEventListener('click', () => {
+            const msg = document.getElementById('inputText').value;
+            if (msg.trim() === "") return;
+
+            displayMessage('user', msg);  // Display user message in chat
+
+            // Emit message to server
+            socket.emit('message', msg);
+
+            // Clear input field
+            document.getElementById('inputText').value = '';
+        });
+
+        // Listen for bot responses from server
+        socket.on('response', (data) => {
+            displayMessage('bot', data);  // Display bot message in chat
+        });
+
+        // Send message when 'Enter' key is pressed
+        document.getElementById('inputText').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('sendButton').click();
+            }
+        });
+
+        document.getElementById('toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('messages').classList.toggle('dark-mode');
+            document.getElementById('message-history').classList.toggle('dark-mode');
+            document.getElementById('inputText').classList.toggle('dark-mode');
+            document.querySelectorAll('.button, #sendButton').forEach(button => {
+                button.classList.toggle('dark-mode');
+            });
+            const toggleImage = document.querySelector('.toggle img');
+            toggleImage.style.opacity = 0;
+            setTimeout(() => {
+                toggleImage.src = document.body.classList.contains('dark-mode') ? '/static/lm.png' : '/static/dm.png';
+                toggleImage.style.opacity = 1;
+            }, 300);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/shri/Desktop/SGPT_Chatling/SanjeevaniGPT/greetings.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="699"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,9:maingreetings"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="greetings" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="18"/><column index="2" value="73"/><column index="3" value="79"/><column index="4" value="63"/><column index="5" value="48"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="sqlite_sequence" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="36"/><column index="2" value="27"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">INSERT INTO greetings (time_of_day, greeting_text, user_type, context) VALUES
+-- Morning Greetings
+('morning', 'Good morning! Hope you have a great day ahead.', 'general', 'casual'),
+('morning', 'Good morning, welcome back! How can I help you today?', 'returning_user', 'casual'),
+('morning', 'Good morning, valued member! Let us know if you need anything.', 'VIP', 'formal'),
+('morning', 'Rise and shine! Ready to start the day?', 'new_user', 'casual'),
+
+-- Afternoon Greetings
+('afternoon', 'Good afternoon! How can I assist you today?', 'general', 'casual'),
+('afternoon', 'Good afternoon, welcome back! What can I do for you?', 'returning_user', 'casual'),
+('afternoon', 'Hello! Hope your day is going well.', 'general', 'casual'),
+('afternoon', 'Good afternoon, honored guest! How may I assist you?', 'VIP', 'formal'),
+
+-- Evening Greetings
+('evening', 'Good evening! How was your day?', 'general', 'casual'),
+('evening', 'Good evening, great to see you back!', 'returning_user', 'casual'),
+('evening', 'Hello there! How can I be of service this evening?', 'VIP', 'formal'),
+('evening', 'Good evening, friend! Here to unwind?', 'general', 'casual'),
+
+-- Night Greetings
+('night', 'Good night! Don’t hesitate to reach out if you need anything.', 'general', 'farewell'),
+('night', 'Hope you had a wonderful day! Sleep well!', 'general', 'farewell'),
+('night', 'Thank you for visiting, have a peaceful night!', 'returning_user', 'farewell'),
+('night', 'It’s late! Feel free to let me know if you need anything before turning in.', 'VIP', 'farewell'),
+
+-- General Greetings
+('general', 'Hello! How can I help you today?', 'general', 'casual'),
+('general', 'Welcome! Happy to assist you.', 'new_user', 'welcome'),
+('general', 'Hello again! What would you like to do today?', 'returning_user', 'casual'),
+('general', 'Great to see you back! Let us know if you need help.', 'VIP', 'welcome'),
+
+-- Contextual Greetings for Specific Scenarios
+('general', 'Hello, new friend! Welcome to our community.', 'new_user', 'welcome'),
+('general', 'Hi there! Ready to explore more?', 'returning_user', 'casual'),
+('general', 'Hey there! What can I do for you?', 'general', 'casual'),
+('general', 'Hi! Ready to discover something new?', 'general', 'casual'),
+
+-- Formal Greetings
+('morning', 'Good morning! It’s a pleasure to assist you.', 'general', 'formal'),
+('afternoon', 'Good afternoon! How may I serve you today?', 'VIP', 'formal'),
+('evening', 'Good evening! Let me know if I can assist you.', 'general', 'formal'),
+('general', 'Hello! At your service anytime.', 'VIP', 'formal'),
+
+-- Holiday and Seasonal Greetings
+('general', 'Happy holidays! How can I help you today?', 'general', 'holiday'),
+('general', 'Season’s greetings! Here to help make things easier.', 'VIP', 'holiday'),
+('general', 'Merry Christmas! Let us know if you need any help.', 'general', 'holiday'),
+('general', 'Happy New Year! Wishing you success and joy!', 'new_user', 'holiday'),
+
+-- Weekend Greetings
+('morning', 'Good morning and happy weekend!', 'general', 'weekend'),
+('afternoon', 'Good afternoon! Hope you’re enjoying your weekend.', 'general', 'weekend'),
+('evening', 'Good evening! How’s your weekend going?', 'returning_user', 'weekend'),
+('general', 'Hello! Ready for a relaxing weekend?', 'new_user', 'weekend'),
+
+-- Additional Farewell Messages
+('general', 'Thank you for visiting! Have a wonderful day.', 'general', 'farewell'),
+('general', 'Thanks for stopping by! Take care.', 'returning_user', 'farewell'),
+('general', 'Goodbye! Reach out if you need any more help.', 'VIP', 'farewell'),
+('general', 'Farewell, friend! Until next time.', 'general', 'farewell'),
+
+-- Special Occasion Greetings
+('general', 'Happy Birthday! Wishing you a fantastic year ahead.', 'VIP', 'birthday'),
+('general', 'Congratulations on your special day!', 'returning_user', 'birthday'),
+('general', 'Celebrating something? We’re glad to share the joy!', 'general', 'celebration'),
+('general', 'Best wishes on this wonderful day!', 'new_user', 'celebration'),
+
+-- Event-Specific Greetings
+('general', 'Hello! Here to make your day better.', 'general', 'event'),
+('general', 'Hello! Ready to kick off something exciting?', 'returning_user', 'event'),
+('general', 'Hello there! Let’s get started with your event!', 'VIP', 'event'),
+('general', 'Welcome! Exciting times ahead.', 'new_user', 'event'),
+
+-- Greetings Based on User Status
+('general', 'Hello! Happy to assist again.', 'returning_user', 'status'),
+('general', 'Welcome back, valued member! How can I serve you?', 'VIP', 'status'),
+('general', 'Hello! How’s it going?', 'general', 'status'),
+('general', 'Welcome back! Let’s get to work.', 'returning_user', 'status'),
+
+-- Custom Greetings for Testing
+('general', 'Hey! Just testing out our services.', 'test_user', 'testing'),
+('general', 'This is a custom greeting for testing purposes.', 'test_user', 'testing'),
+('general', 'Testing, testing! Can you hear me?', 'test_user', 'testing'),
+('general', 'Hello, tester! What’s on the agenda today?', 'test_user', 'testing');
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

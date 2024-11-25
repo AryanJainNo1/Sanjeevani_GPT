@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Sanjeevani GPT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 2rem;
+        }
+
+        .profile-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .welcome-message {
+            color: #4a5568;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-info {
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .info-item {
+            margin-bottom: 1rem;
+        }
+
+        .info-label {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            color: #2d3748;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .primary-button {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .primary-button:hover {
+            background-color: #5a67d8;
+        }
+
+        .secondary-button {
+            background-color: #e53e3e;
+            color: white;
+        }
+
+        .secondary-button:hover {
+            background-color: #c53030;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <img src="https://via.placeholder.com/100" alt="Profile Avatar" class="profile-avatar">
+            <h1>Profile</h1>
+            <div class="welcome-message">
+                Welcome, {{ username }}!
+            </div>
+        </div>
+
+        <div class="profile-info">
+            <div class="info-item">
+                <div class="info-label">Username</div>
+                <div class="info-value">{{ username }}</div>
+            </div>
+            {% if session.get('user_email') %}
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ session.get('user_email') }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="button-container">
+            <a href="{{ url_for('index') }}" class="button primary-button">Go to Bot</a>
+            <a href="{{ url_for('logout') }}" class="button secondary-button">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
