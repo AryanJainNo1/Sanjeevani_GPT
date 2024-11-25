@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /app.py/$1 [L]
+
+AddHandler fcgid-script .py
+Options +ExecCGI 

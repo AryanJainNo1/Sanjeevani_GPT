@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: sanjeevanigpt
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python -m spacy download en_core_web_sm
+    startCommand: gunicorn --worker-class eventlet -w 1 wsgi:application
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URI
+        value: sqlite:///app.db
+      - key: GOOGLE_CLIENT_ID
+        value: 8022877561-mjjlvb4b8do2sqlou4iqkf8u1o452kvp.apps.googleusercontent.com
+      - key: GOOGLE_CLIENT_SECRET
+        value: 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
+      - key: FIREBASE_CLIENT_ID
+        value: 8022877561-mjjlvb4b8do2sqlou4iqkf8u1o452kvp.apps.googleusercontent.com
+      - key: BASE_URL
+        value: https://sanjeevanigpt.onrender.com
+    disk:
+      name: sqlite-data
+      mountPath: /opt/render/project/src/instance
+      sizeGB: 1 
