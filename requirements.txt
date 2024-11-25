@@ -1,0 +1,19 @@
+Flask==3.0.2
+Flask-SocketIO==5.3.6
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+firebase-admin==6.4.0
+google-auth==2.28.1
+google-auth-oauthlib==1.2.0
+google-auth-httplib2==0.2.0
+requests==2.31.0
+pandas==2.2.1
+spacy==3.7.4
+sentence-transformers==2.5.1
+nltk==3.8.1
+Werkzeug==3.0.1
+python-socketio==5.11.1
+SQLAlchemy==2.0.28
+
+# Download spaCy English model
+# Run: python -m spacy download en_core_web_sm 
