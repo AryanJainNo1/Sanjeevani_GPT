@@ -20,13 +20,13 @@ import requests
 
 # Initialize Flask app
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'  # Database for users and greetings
-app.config['GOOGLE_CLIENT_ID'] = '8022877561-mjjlvb4b8do2sqlou4iqkf8u1o452kvp.apps.googleusercontent.com'
-app.config['GOOGLE_CLIENT_SECRET'] = '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'
-app.config['FIREBASE_CLIENT_ID'] = '8022877561-mjjlvb4b8do2sqlou4iqkf8u1o452kvp.apps.googleusercontent.com'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['BASE_URL'] = 'http://localhost:5001'  # Update this to match your port
+SECRET_KEY=os.environ.get('FLASK_SECRET_KEY', os.urandom(24)),
+SQLALCHEMY_DATABASE_URI=os.environ.get('DATABASE_URI', 'sqlite:///app.db'),
+SQLALCHEMY_TRACK_MODIFICATIONS=False,
+GOOGLE_CLIENT_ID=os.environ.get('GOOGLE_CLIENT_ID'),
+GOOGLE_CLIENT_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET'),
+FIREBASE_CLIENT_ID=os.environ.get('FIREBASE_CLIENT_ID'),
+BASE_URL='https://sanjeevanigpt.in'
 REDIRECT_URI = f"{app.config['BASE_URL']}/callback"  # Update redirect URI
 
 # Initialize Firebase Admin SDK with explicit options
