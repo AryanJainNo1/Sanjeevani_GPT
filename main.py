@@ -20,14 +20,20 @@ import requests
 
 # Initialize Flask app
 app = Flask(__name__)
-SECRET_KEY=os.environ.get('FLASK_SECRET_KEY', os.urandom(24)),
-SQLALCHEMY_DATABASE_URI=os.environ.get('DATABASE_URI', 'sqlite:///app.db'),
-SQLALCHEMY_TRACK_MODIFICATIONS=False,
-GOOGLE_CLIENT_ID=os.environ.get('GOOGLE_CLIENT_ID'),
-GOOGLE_CLIENT_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET'),
-FIREBASE_CLIENT_ID=os.environ.get('FIREBASE_CLIENT_ID'),
-BASE_URL='https://sanjeevanigpt.in'
-REDIRECT_URI = f"{app.config['BASE_URL']}/callback"  # Update redirect URI
+
+# Basic configuration
+app.config.update({
+    'SECRET_KEY': os.environ.get('FLASK_SECRET_KEY', os.urandom(24)),
+    'SQLALCHEMY_DATABASE_URI': os.environ.get('DATABASE_URI', 'sqlite:///app.db'),
+    'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+    'GOOGLE_CLIENT_ID': os.environ.get('GOOGLE_CLIENT_ID'),
+    'GOOGLE_CLIENT_SECRET': os.environ.get('GOOGLE_CLIENT_SECRET'),
+    'FIREBASE_CLIENT_ID': os.environ.get('FIREBASE_CLIENT_ID'),
+    'BASE_URL': os.environ.get('BASE_URL', 'https://sanjeevanigpt.onrender.com')
+})
+
+# Define redirect URI after app configuration
+REDIRECT_URI = f"{app.config['BASE_URL']}/callback"
 
 # Initialize Firebase Admin SDK with explicit options
 cred = credentials.Certificate('./sanjeevani-gpt-firebase-adminsdk-17223-27ceb5f6db.json')
@@ -36,11 +42,11 @@ firebase_admin.initialize_app(cred, {
 })
 
 # Your Firebase project's Web Client ID
-CLIENT_ID = '8022877561-mjjlvb4b8do2sqlou4iqkf8u1o452kvp.apps.googleusercontent.com'
+CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
 
+# Constants for OAuth
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 SCOPE = "openid email profile"
-REDIRECT_URI = 'https://sanjeevani-gpt.firebaseapp.com/__/auth/handler'
 
 # Extensions Initialization
 db = SQLAlchemy(app)
