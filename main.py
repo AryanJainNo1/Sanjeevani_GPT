@@ -17,9 +17,6 @@ from flask import Flask, request, jsonify, session, redirect, url_for, render_te
 from google.auth.transport.requests import Request
 from google.oauth2.service_account import Credentials
 import requests
-import anvil.server
-
-anvil.server.connect("server_XHJREKO3OSWYXDACQ23EVYLW-TK5KF237QQ52DVG2")
 
 # Initialize Flask app
 app = Flask(__name__)
